@@ -11,12 +11,12 @@ To use this module, add it to the modules array in the `config/config.js` file:
 modules: [
 	{
 		module: 'MMM-GPSWeather',
-		position: 'lower_third',	// This can be any of the regions.
-									// Best results in one of the middle regions like: lower_third
+		position: 'bottom_left',	// This can be any of the regions.
+									// Best results in one of the side regions like: bottom_left
 		config: {
 			// See 'Configuration options' for more information.
 			locationAPIKey: '1234567890zbcdefghijkl' //google maps API key - REQUIRED
-			username: 'MyName' // Part of the position URL - REQUIRED
+			username: 'MyName' // Part of the position URL
 			latlonUrlBase: "http://yourserver.net/gps", //The server you have your GPS file hosted - REQUIRED
 			WUAPIKey: '12391290348sjdf834' // Wunderground API Key - REQUIRED
 
@@ -41,7 +41,7 @@ The following properties can be configured:
 	<tbody>
 		<tr>
 			<td><code>username</code></td>
-			<td>The username used for URL differentiation.<br>
+			<td>The username used for URL differentiation and display.<br>
 				<br><b>Example:</b> <code>JohnR</code>
 				<br> This value is <b>REQUIRED</b>
 			</td>
