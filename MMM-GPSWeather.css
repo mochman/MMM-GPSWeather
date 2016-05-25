@@ -1,0 +1,18 @@
+.MMM-GPSWeather .day {
+  padding-left: 0;
+  padding-right: 20px;
+}
+
+.MMM-GPSWeather .weather-icon {
+  padding-right: 20px;
+  text-align: center;
+}
+
+.MMM-GPSWeather .pop {
+  text-align: right;
+}
+
+.MMM-GPSWeather .min-temp {
+  padding-left: 20px;
+  padding-right: 0;
+}
