@@ -1,5 +1,5 @@
 # Module: MMM-GPSWeather
-The `MMM-GPSWeather` module is an addon.
+The `MMM-GPSWeather` module is a <a href="https://github.com/MichMich/MagicMirror">MagicMirror</a> addon module.
 This module outputs the last location of a user who's updated a specific website.
 Uses a modified version of <a href="https://github.com/herverenault/Self-Hosted-GPS-Tracker">Hervé Renault's Self Hosted GPS Tracker</a>
 The modified files are located in the <a href="./server-files">server-files</a> folder
