@@ -219,7 +219,7 @@ Module.register("MMM-GPSWeather",{
 //WEATHER SECTION
 //---------------------------------------------------------------------------------------------------------------------------
 	updateWeather: function() {
-		var url = this.config.apiBase + this.config.WUAPIKey + this.config.forecastEndpoint + this.friendlyName + ".json";
+		var url = this.config.apiBase + this.config.WUAPIKey + this.config.forecastEndpoint + this.varLat + "," + this.varLon + ".json";
 		var self = this;
 		var weatherRequest = new XMLHttpRequest();
 		weatherRequest.open("GET", url, true);
@@ -237,10 +237,10 @@ Module.register("MMM-GPSWeather",{
 				} else if (this.status === 0) {
 					self.config.WUAPIKey = "";
 					self.updateDom(self.config.animationSpeed);
-					Log.error(self.name + ": Incorrect Wunderground APPID.");
+					console.log(self.name + ": Incorrect Wunderground APPID.");
 					self.retry = false;
 				} else {
-					Log.error(self.name + ": Could not load weather.");
+					console.log(self.name + ": Could not load weather.");
 				}
 
 				if (self.retry) {
@@ -259,22 +259,28 @@ Module.register("MMM-GPSWeather",{
 	processWeather: function(data) {
 	  
 		this.forecast = [];
-		for (var i = 0, count = Math.min(data.forecast.simpleforecast.forecastday.length, this.config.maxNumberOfDays); i < count; i++) {
+		try{
+		  
+			for (var i = 0, count = Math.min(data.forecast.simpleforecast.forecastday.length, this.config.maxNumberOfDays); i < count; i++) {
 			
-			var forecast = data.forecast.simpleforecast.forecastday[i];
-			this.forecast.push({
+				var forecast = data.forecast.simpleforecast.forecastday[i];
+				this.forecast.push({
 
-				day: moment(forecast.date.epoch, "X").format("ddd"),
+					day: moment(forecast.date.epoch, "X").format("ddd"),
 //							icon: forecast.icon_url,
-				icon: this.config.iconTable[forecast.icon],
-				pop: forecast.pop,
-				maxTemp: this.roundValue(forecast.high.fahrenheit),
-				minTemp: this.roundValue(forecast.low.fahrenheit),
-				maxTempC: this.roundValue(forecast.high.celsius),
-				minTempC: this.roundValue(forecast.low.celsius)
+					icon: this.config.iconTable[forecast.icon],
+					pop: forecast.pop,
+					maxTemp: this.roundValue(forecast.high.fahrenheit),
+					minTemp: this.roundValue(forecast.low.fahrenheit),
+					maxTempC: this.roundValue(forecast.high.celsius),
+					minTempC: this.roundValue(forecast.low.celsius)
 
-			});
+				});
+			}
+		}catch(e){
+		  console.log(this.name + ": Could not load weather from lat/lon");
 		}
+	      
 		this.loadingVar = null;
 		this.loaded = true;
 		this.updateDom(this.config.animationSpeed);
