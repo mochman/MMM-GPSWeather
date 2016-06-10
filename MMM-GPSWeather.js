@@ -78,7 +78,7 @@ Module.register("MMM-GPSWeather",{
 		
 		this.varLat = null;
 		this.varLon = null;
-		this.varTime = null;
+		this.varTime = "";
 		this.friendlyName = null;		
 		this.errorData = null;
 
@@ -137,7 +137,7 @@ Module.register("MMM-GPSWeather",{
 		var header = text + this.friendlyName;
 		
 		var headerTable = document.createElement("span");
-		headerTable.innerHTML = header + "<BR>" + this.varTime + "<hr>";
+		headerTable.innerHTML = header + this.varTime + "<hr>";
 		
 		wrapper.appendChild(headerTable);
 
@@ -354,13 +354,15 @@ Module.register("MMM-GPSWeather",{
 	processLocation: function(data) {
 		this.varLat = this.roundValue2(data.lat);
 		this.varLon = this.roundValue2(data.lon);
-		this.varTime = this.calcTime(data.time);
+		if (data.time !== "undefined") {
+			this.varTime = this.calcTime(data.time);
+		}
 		this.loadingVar = "Got Lat/Long, waiting for City/State...";
 		this.updateDom(this.config.animationSpeed);
 	},
 	
 	calcTime: function(timeIn) {
-		var returnTime = null;
+		var returnTime = "<BR> ";
 		var timeNow = new Date().getTime();
 		if(timeIn > timeNow) {
 			diffTime = timeIn - timeNow;
