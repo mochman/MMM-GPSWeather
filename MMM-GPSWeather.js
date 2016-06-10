@@ -78,6 +78,7 @@ Module.register("MMM-GPSWeather",{
 		
 		this.varLat = null;
 		this.varLon = null;
+		this.varTime = null;
 		this.friendlyName = null;		
 		this.errorData = null;
 
@@ -136,7 +137,7 @@ Module.register("MMM-GPSWeather",{
 		var header = text + this.friendlyName;
 		
 		var headerTable = document.createElement("span");
-		headerTable.innerHTML = header + "<hr>";
+		headerTable.innerHTML = header + "<BR>" + this.varTime + "<hr>";
 		
 		wrapper.appendChild(headerTable);
 
@@ -353,9 +354,35 @@ Module.register("MMM-GPSWeather",{
 	processLocation: function(data) {
 		this.varLat = this.roundValue2(data.lat);
 		this.varLon = this.roundValue2(data.lon);
+		this.varTime = this.calcTime(data.time);
 		this.loadingVar = "Got Lat/Long, waiting for City/State...";
 		this.updateDom(this.config.animationSpeed);
 	},
+	
+	calcTime: function(timeIn) {
+		var returnTime = null;
+		var timeNow = new Date().getTime();
+		if(timeIn > timeNow) {
+			diffTime = timeIn - timeNow;
+		} else {
+			diffTime = timeNow - timeIn;
+		}
+		var diffTimeDays = diffTime / 24 / 60 / 60 / 1000;
+		var diffTimeHours = (diffTimeDays % 1) * 24;
+		var diffTimeMin = (diffTimeHours % 1) * 60;
+		if (diffTimeDays >= 1) {
+			
+			returnTime = "As of " + (diffTimeDays - (diffTimeDays % 1));
+			returnTime += (diffTimeDays - (diffTimeDays % 1)) == 1 ? " day ago" : " days ago";
+		} else if (diffTimeHours >= 1) {
+			returnTime = "As of " + (diffTimeHours - (diffTimeHours % 1));
+			returnTime += (diffTimeHours - (diffTimeHours %1)) == 1  ? " hour ago" : " hours ago";
+		} else {
+			returnTime = "As of " + (diffTimeMin - (diffTimeMin % 1));
+			returnTime += (diffTimeMin - (diffTimeMin %1)) == 1  ? " minute ago" : " minutes ago";
+		}
+		return returnTime;
+	}
 
 	processName: function(data) {
 		if (data.status === "REQUEST_DENIED" ) {
