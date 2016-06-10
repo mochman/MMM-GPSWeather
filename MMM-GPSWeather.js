@@ -78,6 +78,7 @@ Module.register("MMM-GPSWeather",{
 		
 		this.varLat = null;
 		this.varLon = null;
+		this.varTime = "";
 		this.friendlyName = null;		
 		this.errorData = null;
 
@@ -99,7 +100,7 @@ Module.register("MMM-GPSWeather",{
 
 	// Override dom generator.
 	getDom: function() {
-		var text = this.config.username + "'s in ";
+		var text = "<h1>" + this.config.username + "'s in ";
 
 		var wrapper = document.createElement("div");
 
@@ -133,10 +134,10 @@ Module.register("MMM-GPSWeather",{
 			return wrapper;
 		}
 		
-		var header = text + this.friendlyName;
+		var header = text + this.friendlyName + "</h1>";
 		
 		var headerTable = document.createElement("span");
-		headerTable.innerHTML = header + "<hr>";
+		headerTable.innerHTML = header + this.varTime + "<hr>";
 		
 		wrapper.appendChild(headerTable);
 
@@ -353,8 +354,35 @@ Module.register("MMM-GPSWeather",{
 	processLocation: function(data) {
 		this.varLat = this.roundValue2(data.lat);
 		this.varLon = this.roundValue2(data.lon);
+		if (data.time !== "undefined") {
+			this.varTime = this.calcTime(data.time);
+		}
 		this.loadingVar = "Got Lat/Long, waiting for City/State...";
 		this.updateDom(this.config.animationSpeed);
+	},
+	
+	calcTime: function(timeIn) {
+		var returnTime = "<p>";
+		var timeNow = new Date().getTime();
+		if(timeIn > timeNow) {
+			diffTime = timeIn - timeNow;
+		} else {
+			diffTime = timeNow - timeIn;
+		}
+		var diffTimeDays = diffTime / 24 / 60 / 60 / 1000;
+		var diffTimeHours = (diffTimeDays % 1) * 24;
+		var diffTimeMin = (diffTimeHours % 1) * 60;
+		if (diffTimeDays >= 1) {			
+			returnTime += "As of " + (diffTimeDays - (diffTimeDays % 1));
+			returnTime += (diffTimeDays - (diffTimeDays % 1)) == 1 ? " day ago" : " days ago</p>";
+		} else if (diffTimeHours >= 1) {
+			returnTime += "As of " + (diffTimeHours - (diffTimeHours % 1));
+			returnTime += (diffTimeHours - (diffTimeHours %1)) == 1  ? " hour ago" : " hours ago</p>";
+		} else {
+			returnTime += "As of " + (diffTimeMin - (diffTimeMin % 1));
+			returnTime += (diffTimeMin - (diffTimeMin %1)) == 1  ? " minute ago" : " minutes ago</p>";
+		}
+		return returnTime;
 	},
 
 	processName: function(data) {
