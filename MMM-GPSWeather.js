@@ -139,11 +139,11 @@ Module.register("MMM-GPSWeather",{
 		var headerTable = document.createElement("span");
 
 		if(this.config.locationOnly === true) {
-			headerTable.innerHTML = header + "<h1>" + this.varTime + "</h1>";
+			headerTable.innerHTML = header + "<h2>" + this.varTime + "</h2>";
 			wrapper.appendChild(headerTable);
 		} else {
 			var headerTable = document.createElement("span");
-			headerTable.innerHTML = header + this.varTime + "<hr>";
+			headerTable.innerHTML = header + "<h2>" + this.varTime + "</h2> <hr>";
 			wrapper.appendChild(headerTable);
 
 			var table = document.createElement("table");
