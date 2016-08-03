@@ -11,6 +11,7 @@ Module.register("MMM-GPSWeather",{
 	// Default module config.
 	defaults: {
 		locationAPIKey: "",
+		locationOnly: false,
 		username: "",
 		latlonUrlBase: "",
 		fileLocation: "/here.php",
@@ -75,11 +76,11 @@ Module.register("MMM-GPSWeather",{
 
 	start: function() {
 		Log.info("Starting module: " + this.name);
-		
+
 		this.varLat = null;
 		this.varLon = null;
 		this.varTime = "";
-		this.friendlyName = null;		
+		this.friendlyName = null;
 		this.errorData = null;
 
 		// Set locale.
@@ -88,14 +89,14 @@ Module.register("MMM-GPSWeather",{
 		this.forecast = [];
 		this.loaded = false;
 		this.loadingVar = null;
-		
+
 		//Run the updater function with a delay from the config to start getting data to display
 		this.scheduleUpdate(this.config.initialLoadDelay);
 		this.iconText = null;
 		this.retry = true;
 		this.degSymbol = null;
-		
-		
+
+
 	},
 
 	// Override dom generator.
@@ -110,13 +111,13 @@ Module.register("MMM-GPSWeather",{
 			wrapper.className = "dimmed light small";
 			return wrapper;
 		}
-		
+
 		if (this.config.WUAPIKey === "") {
 			wrapper.innerHTML = "Please set the correct wunderground <i>WUAPIKey</i> in the config for module: " + this.name + ".";
 			wrapper.className = "dimmed light small";
 			return wrapper;
 		}
-		
+
 		if (this.config.locationAPIKey === "") {
 			wrapper.innerHTML = "Please set the correct google <i>locationAPIKey</i> in the config for module: " + this.name + ".";
 			wrapper.className = "dimmed light small";
@@ -133,90 +134,90 @@ Module.register("MMM-GPSWeather",{
 			wrapper.className = "dimmed light small";
 			return wrapper;
 		}
-		
+
 		var header = text + this.friendlyName + "</h1>";
-		
+
 		var headerTable = document.createElement("span");
 		headerTable.innerHTML = header + this.varTime + "<hr>";
-		
+
 		wrapper.appendChild(headerTable);
 
-		
-		var table = document.createElement("table");
-		table.className = "small";
-		
+		if(this.config.locationOnly === false) {
+			var table = document.createElement("table");
+			table.className = "small";
 
-		for (var f in this.forecast) {
-			var forecast = this.forecast[f];
 
-			var row = document.createElement("tr");
-			table.classname = "row";
-			table.appendChild(row);
+			for (var f in this.forecast) {
+				var forecast = this.forecast[f];
+				var row = document.createElement("tr");
+				table.classname = "row";
+				table.appendChild(row);
 
-			var dayCell = document.createElement("td");
-			dayCell.className = "day";
-			dayCell.innerHTML = forecast.day;
-			row.appendChild(dayCell);
+				var dayCell = document.createElement("td");
+				dayCell.className = "day";
+				dayCell.innerHTML = forecast.day;
+				row.appendChild(dayCell);
 
-                        var popCell = document.createElement("td");
-			popCell.className = "align-right pop";
-                        if (forecast.pop > 0 && this.config.pop) {
-                                popCell.innerHTML = "  <sup>" + forecast.pop + "%</sup>";
-                        }
-                        row.appendChild(popCell);
+        var popCell = document.createElement("td");
+				popCell.className = "align-right pop";
+        if (forecast.pop > 0 && this.config.pop) {
+        	popCell.innerHTML = "  <sup>" + forecast.pop + "%</sup>";
+        }
+        row.appendChild(popCell);
 
-			var iconCell = document.createElement("td");
-			iconCell.className = "align-center bright weather-icon";
-			row.appendChild(iconCell);
+				var iconCell = document.createElement("td");
+				iconCell.className = "align-center bright weather-icon";
+				row.appendChild(iconCell);
 
-			var icon = document.createElement("span");
-			icon.className = forecast.icon;
-			iconCell.appendChild(icon);
+				var icon = document.createElement("span");
+				icon.className = forecast.icon;
+				iconCell.appendChild(icon);
 
-			// Set the degree symbol if desired
-			if (this.config.degreeSym) {
-				degSymbol = "&deg;";
-			}
-
-			var maxTempCell = document.createElement("td");
-			if (this.config.units === "imperial") {
-				maxTempCell.innerHTML = forecast.maxTemp + degSymbol;
-			} else if (this.config.units === "metric") {
-				maxTempCell.innerHTML = forecast.maxTempC + degSymbol;
-			} else {
-				maxTempCell.innerHTML = forecast.maxTempC + 273 + degSymbol;
-			}
-			maxTempCell.className = "align-right bright max-temp";
-			row.appendChild(maxTempCell);
-
-			var minTempCell = document.createElement("td");
-                        if (this.config.units === "imperial") {
-                                minTempCell.innerHTML = forecast.minTemp + degSymbol;
-                        } else if (this.config.units === "metric") {
-                                minTempCell.innerHTML = forecast.minTempC  + degSymbol;
-                        } else {
-                                minTempCell.innerHTML = forecast.minTempC + 273 + degSymbol;
-                        }
-			minTempCell.className = "align-right min-temp";
-			row.appendChild(minTempCell);
-
-			if (this.config.fade && this.config.fadePoint < 1) {
-				if (this.config.fadePoint < 0) {
-					this.config.fadePoint = 0;
+				// Set the degree symbol if desired
+				if (this.config.degreeSym) {
+					degSymbol = "&deg;";
 				}
-				var startingPoint = this.forecast.length * this.config.fadePoint;
-				var steps = this.forecast.length - startingPoint;
-				if (f >= startingPoint) {
-					var currentStep = f - startingPoint;
-					row.style.opacity = 1 - (1 / steps * currentStep);
-				}
-			}
 
+				var maxTempCell = document.createElement("td");
+				if (this.config.units === "imperial") {
+					maxTempCell.innerHTML = forecast.maxTemp + degSymbol;
+				} else if (this.config.units === "metric") {
+					maxTempCell.innerHTML = forecast.maxTempC + degSymbol;
+				} else {
+					maxTempCell.innerHTML = forecast.maxTempC + 273 + degSymbol;
+				}
+				maxTempCell.className = "align-right bright max-temp";
+				row.appendChild(maxTempCell);
+
+				var minTempCell = document.createElement("td");
+        	if (this.config.units === "imperial") {
+          	minTempCell.innerHTML = forecast.minTemp + degSymbol;
+          } else if (this.config.units === "metric") {
+          	minTempCell.innerHTML = forecast.minTempC  + degSymbol;
+          } else {
+          	minTempCell.innerHTML = forecast.minTempC + 273 + degSymbol;
+          }
+				minTempCell.className = "align-right min-temp";
+				row.appendChild(minTempCell);
+
+				if (this.config.fade && this.config.fadePoint < 1) {
+					if (this.config.fadePoint < 0) {
+						this.config.fadePoint = 0;
+					}
+					var startingPoint = this.forecast.length * this.config.fadePoint;
+					var steps = this.forecast.length - startingPoint;
+					if (f >= startingPoint) {
+						var currentStep = f - startingPoint;
+						row.style.opacity = 1 - (1 / steps * currentStep);
+					}
+				}
+
+			}
+			wrapper.appendChild(table);
 		}
-		wrapper.appendChild(table);
 		return wrapper;
 	},
-	
+
 //WEATHER SECTION
 //---------------------------------------------------------------------------------------------------------------------------
 	updateWeather: function() {
@@ -258,12 +259,12 @@ Module.register("MMM-GPSWeather",{
 	 * argument data object - Weather information received form wunderground.
 	 */
 	processWeather: function(data) {
-	  
+
 		this.forecast = [];
 		try{
-		  
+
 			for (var i = 0, count = Math.min(data.forecast.simpleforecast.forecastday.length, this.config.maxNumberOfDays); i < count; i++) {
-			
+
 				var forecast = data.forecast.simpleforecast.forecastday[i];
 				this.forecast.push({
 
@@ -281,12 +282,12 @@ Module.register("MMM-GPSWeather",{
 		}catch(e){
 		  console.log(this.name + ": Could not load weather from lat/lon");
 		}
-	      
+
 		this.loadingVar = null;
 		this.loaded = true;
 		this.updateDom(this.config.animationSpeed);
 	},
-	
+
 	roundValue: function(temperature) {
 		return Math.round(temperature);
 	},
@@ -310,7 +311,7 @@ Module.register("MMM-GPSWeather",{
 					self.processLocation(JSON.parse(locationRequest.response));
 					//Start to find the City/State info
 					self.locationName();
-					
+
 				} else if (locationRequest.status === 0 ) {
 					Log.error(self.name + ": Could not get valid JSON Lat/Long data from " + this.config.latlongUrlBase);
 					self.config.errorData = "Could not get valid JSON Lat/Long data from " + this.config.latlongUrlBase;
@@ -318,19 +319,19 @@ Module.register("MMM-GPSWeather",{
 				} else {
 					Log.error(self.name + ": Some problem with getting Lat/Long.");
 					self.config.errorData = "Some problem with getting Lat/Long";
-					self.updateDom(self.config.animationSpeed);					
+					self.updateDom(self.config.animationSpeed);
 				}
 			}
 		};
 		locationRequest.send();
-		
+
 	},
 
 	locationName: function() {
 		var self = this;
 		var nameURL = self.config.nameUrlBase + self.varLat + "," + self.varLon + "&key=" + self.config.locationAPIKey;
 
-		
+
 		var nameRequest = new XMLHttpRequest();
 		nameRequest.open("GET", nameURL, true);
 		nameRequest.onreadystatechange = function () {
@@ -350,7 +351,7 @@ Module.register("MMM-GPSWeather",{
 		};
 		nameRequest.send();
 	},
-	  
+
 	processLocation: function(data) {
 		this.varLat = this.roundValue2(data.lat);
 		this.varLon = this.roundValue2(data.lon);
@@ -360,7 +361,7 @@ Module.register("MMM-GPSWeather",{
 		this.loadingVar = "Got Lat/Long, waiting for City/State...";
 		this.updateDom(this.config.animationSpeed);
 	},
-	
+
 	calcTime: function(timeIn) {
 		var returnTime = "<p>";
 		var timeNow = new Date().getTime();
@@ -372,7 +373,7 @@ Module.register("MMM-GPSWeather",{
 		var diffTimeDays = diffTime / 24 / 60 / 60 / 1000;
 		var diffTimeHours = (diffTimeDays % 1) * 24;
 		var diffTimeMin = (diffTimeHours % 1) * 60;
-		if (diffTimeDays >= 1) {			
+		if (diffTimeDays >= 1) {
 			returnTime += "As of " + (diffTimeDays - (diffTimeDays % 1));
 			returnTime += (diffTimeDays - (diffTimeDays % 1)) == 1 ? " day ago" : " days ago</p>";
 		} else if (diffTimeHours >= 1) {
@@ -391,7 +392,7 @@ Module.register("MMM-GPSWeather",{
 				this.config.locationAPIKey = "";
 				this.retry = false;
 			} else {
-				this.errorData = "There was an issue with google providing you data";			 
+				this.errorData = "There was an issue with google providing you data";
 			}
 		} else {
 			this.friendlyName = data.results[0].address_components[2].long_name + ", " + data.results[0].address_components[4].short_name;
@@ -401,14 +402,14 @@ Module.register("MMM-GPSWeather",{
 	},
 //--------------------------------------------------------------------------------------------------------------------------------------------
 
-	
+
 	scheduleUpdate: function(delay) {
 		var nextLoad = this.config.updateInterval;
 		//if a valid delay > 0 was passed into the function use that for the delay
 		if (typeof delay !== "undefined" && delay >= 0) {
 			nextLoad = delay;
 		}
-		
+
 		var self = this;
 		setTimeout(function() {
 			self.getLocation();
@@ -418,5 +419,5 @@ Module.register("MMM-GPSWeather",{
 	roundValue2: function(position) {
 		return parseFloat(position).toFixed(4);
 	}
-	
+
 });

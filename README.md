@@ -15,7 +15,7 @@ modules: [
 									// Best results in one of the side regions like: bottom_left
 		config: {
 			// See 'Configuration options' for more information.
-			locationOnly: 'TRUE',
+			locationOnly: false, //Display just location, or loc & weather
 			locationAPIKey: '1234567890zbcdefghijkl', //google maps API key - REQUIRED
 			username: 'MyName', // Part of the position URL
 			latlonUrlBase: "http://yourserver.net/gps", //The server you have your GPS file hosted - REQUIRED
@@ -56,7 +56,8 @@ The following properties can be configured:
 		<tr>
 			<td><code>locationOnly</code></td>
 			<td>Do you just want position and not weather?<br>
-				<br><b>Example:</b> <code>TRUE</code>
+			<br><b>Possible values:</b> <code>true</code> or <code>false</code>
+			<br><b>Default value:</b> <code>false</code>
 			</td>
 		</tr>
 		<tr>
