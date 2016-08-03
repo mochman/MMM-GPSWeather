@@ -138,14 +138,16 @@ Module.register("MMM-GPSWeather",{
 		var header = text + this.friendlyName + "</h1>";
 
 		var headerTable = document.createElement("span");
-		headerTable.innerHTML = header + this.varTime + "<hr>";
-
-		wrapper.appendChild(headerTable);
-
+		if(this.config.locationOnly === true) {
+			headerTable.innerHTML = header + this.varTime;
+			wrapper.appendChild(headerTable);
+		} else {
+			headerTable.innerHTML = header + this.varTime + "<hr>";
+			wrapper.appendChild(headerTable);
 
 			var table = document.createElement("table");
 			table.className = "small";
-if(this.config.locationOnly === false) {
+
 
 			for (var f in this.forecast) {
 				var forecast = this.forecast[f];
@@ -213,9 +215,9 @@ if(this.config.locationOnly === false) {
 				}
 
 			}
-		}
-		wrapper.appendChild(table);
 
+		wrapper.appendChild(table);
+	}
 		return wrapper;
 	},
 
