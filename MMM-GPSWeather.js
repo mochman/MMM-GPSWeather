@@ -137,11 +137,13 @@ Module.register("MMM-GPSWeather",{
 
 		var header = text + this.friendlyName + "</h1>";
 
-		var headerTable = document.createElement("span");
+
 		if(this.config.locationOnly === true) {
-			headerTable.innerHTML = header + this.varTime;
-			wrapper.appendChild(headerTable);
+			wrapper.appendChild(header);
+			header = this.varTime;
+			wrapper.appendChild(header);
 		} else {
+			var headerTable = document.createElement("span");
 			headerTable.innerHTML = header + this.varTime + "<hr>";
 			wrapper.appendChild(headerTable);
 
