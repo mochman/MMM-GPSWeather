@@ -142,10 +142,10 @@ Module.register("MMM-GPSWeather",{
 
 		wrapper.appendChild(headerTable);
 
-		if(this.config.locationOnly === false) {
+
 			var table = document.createElement("table");
 			table.className = "small";
-
+if(this.config.locationOnly === false) {
 
 			for (var f in this.forecast) {
 				var forecast = this.forecast[f];
@@ -213,8 +213,9 @@ Module.register("MMM-GPSWeather",{
 				}
 
 			}
-			wrapper.appendChild(table);
 		}
+		wrapper.appendChild(table);
+
 		return wrapper;
 	},
 
