@@ -1,7 +1,7 @@
 # Module: MMM-GPSWeather
 The `MMM-GPSWeather` module is a <a href="https://github.com/MichMich/MagicMirror">MagicMirror</a> addon module.
 This module outputs the last location of a user who's updated a specific website.
-Uses a modified version of <a href="https://github.com/herverenault/Self-Hosted-GPS-Tracker">Hervé Renault's Self Hosted GPS Tracker</a>
+Uses a modified version of <a href="https://github.com/herverenault/Self-Hosted-GPS-Tracker">Hervï¿½ Renault's Self Hosted GPS Tracker</a>
 The modified files are located in the <a href="./server-files">server-files</a> folder
 
 ## Using the module
@@ -15,8 +15,9 @@ modules: [
 									// Best results in one of the side regions like: bottom_left
 		config: {
 			// See 'Configuration options' for more information.
-			locationAPIKey: '1234567890zbcdefghijkl' //google maps API key - REQUIRED
-			username: 'MyName' // Part of the position URL
+			locationOnly: 'TRUE',
+			locationAPIKey: '1234567890zbcdefghijkl', //google maps API key - REQUIRED
+			username: 'MyName', // Part of the position URL
 			latlonUrlBase: "http://yourserver.net/gps", //The server you have your GPS file hosted - REQUIRED
 			WUAPIKey: '12391290348sjdf834' // Wunderground API Key - REQUIRED
 
@@ -50,6 +51,12 @@ The following properties can be configured:
 			<td><code>locationAPIKey</code></td>
 			<td>The <a href="https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding" target="_blank">Google's</a> API key, which can be obtained by creating google account.<br>
 				<br> This value is <b>REQUIRED</b>
+			</td>
+		</tr>
+		<tr>
+			<td><code>locationOnly</code></td>
+			<td>Do you just want position and not weather?<br>
+				<br><b>Example:</b> <code>TRUE</code>
 			</td>
 		</tr>
 		<tr>
@@ -88,7 +95,7 @@ The following properties can be configured:
 			<td>Wunderground's API URL<br>
 				<br><b>Default Value:</b> <code>"/forecast10day/q/"</code>
 			</td>
-		</tr>	
+		</tr>
 		<tr>
 			<td><code>updateInterval</code></td>
 			<td>How often does the content needs to be fetched? (Milliseconds)<br>
