@@ -342,10 +342,13 @@ Module.register("MMM-GPSWeather",{
 			if (nameRequest.readyState === 4) {
 				if (nameRequest.status === 200) {
 					self.processName(JSON.parse(nameRequest.response));
-					if (self.errorData === null) {
+					if (self.errorData === null && self.config.locationOnly === false) {
 						self.updateWeather();
+					} else if (self.errorData === null && self.config.locationOnly !== false) {
+						self.loadingVar = null;
+				                self.loaded = true;
+				                self.updateDom(self.config.animationSpeed);
 					}
-
 				} else {
 					Log.error(self.name + ": Some problem with getting City/State.");
 					self.config.errorData = "Some problem with getting City/State";
