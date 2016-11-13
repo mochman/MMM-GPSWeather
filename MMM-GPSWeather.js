@@ -173,7 +173,7 @@ Module.register("MMM-GPSWeather",{
 				row.appendChild(iconCell);
 
 				var icon = document.createElement("span");
-				icon.className = forecast.icon;
+				icon.className = "wi weathericon " + forecast.icon;
 				iconCell.appendChild(icon);
 
 				// Set the degree symbol if desired
@@ -348,6 +348,7 @@ Module.register("MMM-GPSWeather",{
 						self.loadingVar = null;
 				                self.loaded = true;
 				                self.updateDom(self.config.animationSpeed);
+						self.scheduleUpdate(self.config.updateInterval);
 					}
 				} else {
 					Log.error(self.name + ": Some problem with getting City/State.");
@@ -419,6 +420,7 @@ Module.register("MMM-GPSWeather",{
 
 		var self = this;
 		setTimeout(function() {
+console.log("Updating");
 			self.getLocation();
 		}, nextLoad);
 	},
